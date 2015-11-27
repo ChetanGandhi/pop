@@ -9,8 +9,13 @@
 
 #import "POPAnimationTestsExtras.h"
 
-#import <POP/POP.h>
-#import <POP/POPAnimatorPrivate.h>
+#import <pop/POP.h>
+#import <pop/POPAnimatorPrivate.h>
+
+void POPAnimatorRenderTime(POPAnimator *animator, CFTimeInterval beginTime, CFTimeInterval time)
+{
+  [animator renderTime:beginTime + time];
+}
 
 void POPAnimatorRenderTimes(POPAnimator *animator, CFTimeInterval beginTime, NSArray *times)
 {
@@ -21,12 +26,15 @@ void POPAnimatorRenderTimes(POPAnimator *animator, CFTimeInterval beginTime, NSA
 
 void POPAnimatorRenderDuration(POPAnimator *animator, CFTimeInterval beginTime, CFTimeInterval duration, CFTimeInterval step)
 {
+  CFTimeInterval initialTime = animator.beginTime;
+  animator.beginTime = beginTime;
   NSCAssert(step > 0, @"unexpected step %f", step);
   CFTimeInterval time = 0;
   while(time <= duration) {
     [animator renderTime:beginTime + time];
     time += step;
   }
+  animator.beginTime = initialTime;
 }
 
 POPBasicAnimation *FBTestLinearPositionAnimation(CFTimeInterval beginTime)

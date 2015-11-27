@@ -7,13 +7,14 @@
  of patent rights can be found in the PATENTS file in the same directory.
  */
 
+#import <OCMock/OCMock.h>
+
 #import <QuartzCore/QuartzCore.h>
 
-#import <OCMock/OCMock.h>
-#import <SenTestingKit/SenTestingKit.h>
+#import <XCTest/XCTest.h>
 
-#import <POP/POP.h>
-#import <POP/POPAnimatorPrivate.h>
+#import <pop/POP.h>
+#import <pop/POPAnimatorPrivate.h>
 
 #import "POPAnimatable.h"
 #import "POPAnimationTestsExtras.h"
@@ -85,7 +86,7 @@
   CGRect lastRect = [lastEvent.value CGRectValue];
   
   // verify last rect is to rect
-  STAssertTrue(CGRectEqualToRect(lastRect, toRect), @"unexpected last rect value: %@", lastEvent);
+  XCTAssertTrue(CGRectEqualToRect(lastRect, toRect), @"unexpected last rect value: %@", lastEvent);
 }
 
 @end

@@ -10,13 +10,15 @@
 #import <QuartzCore/QuartzCore.h>
 
 #import <OCMock/OCMock.h>
-#import <SenTestingKit/SenTestingKit.h>
 
-#import <POP/POP.h>
+#import <XCTest/XCTest.h>
+
+#import <pop/POP.h>
+#import <pop/POPAnimatorPrivate.h>
 
 #import "POPAnimationTestsExtras.h"
 
-@interface POPAnimationMRRTests : SenTestCase
+@interface POPAnimationMRRTests : XCTestCase
 {
   POPAnimator *_animator;
   CFTimeInterval _beginTime;
@@ -30,6 +32,7 @@
   [super setUp];
   _animator = [[POPAnimator sharedAnimator] retain];
   _beginTime = CACurrentMediaTime();
+  _animator.beginTime = _beginTime;
 }
 
 - (void)tearDown
@@ -46,10 +49,10 @@
   @autoreleasepool {
     id delegate = [OCMockObject niceMockForProtocol:@protocol(POPAnimationDelegate)];
     anim.delegate = delegate;
-    STAssertNotNil(anim.delegate, @"delegate should not be nil");
+    XCTAssertNotNil(anim.delegate, @"delegate should not be nil");
   }
 
-  STAssertNil(anim.delegate, @"delegate should be nil");
+  XCTAssertNil(anim.delegate, @"delegate should be nil");
 }
 
 - (void)testAnimationCancellationOnAnimatableDeallocation

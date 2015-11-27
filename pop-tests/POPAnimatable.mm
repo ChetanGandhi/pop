@@ -9,13 +9,15 @@
 
 #import "POPAnimatable.h"
 
-#import <POP/POP.h>
+#import <pop/POP.h>
 
 @implementation POPAnimatable
 {
   BOOL _recording;
   NSMutableDictionary *_recordedValuesDict;
 }
+@synthesize radius = _radius;
+@synthesize position = _position;
 
 static void record_value(POPAnimatable *self, NSString *key, id value)
 {

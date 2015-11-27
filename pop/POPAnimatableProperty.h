@@ -8,7 +8,10 @@
  */
 
 #import <CoreGraphics/CoreGraphics.h>
+
 #import <Foundation/NSObject.h>
+
+#import <pop/POPDefines.h>
 
 @class POPMutableAnimatableProperty;
 
@@ -90,6 +93,8 @@
 extern NSString * const kPOPLayerBackgroundColor;
 extern NSString * const kPOPLayerBounds;
 extern NSString * const kPOPLayerCornerRadius;
+extern NSString * const kPOPLayerBorderWidth;
+extern NSString * const kPOPLayerBorderColor;
 extern NSString * const kPOPLayerOpacity;
 extern NSString * const kPOPLayerPosition;
 extern NSString * const kPOPLayerPositionX;
@@ -122,6 +127,9 @@ extern NSString * const kPOPLayerShadowRadius;
 extern NSString * const kPOPShapeLayerStrokeStart;
 extern NSString * const kPOPShapeLayerStrokeEnd;
 extern NSString * const kPOPShapeLayerStrokeColor;
+extern NSString * const kPOPShapeLayerFillColor;
+extern NSString * const kPOPShapeLayerLineWidth;
+extern NSString * const kPOPShapeLayerLineDashPhase;
 
 /**
  Common NSLayoutConstraint property names.
@@ -143,7 +151,7 @@ extern NSString * const kPOPViewScaleX;
 extern NSString * const kPOPViewScaleXY;
 extern NSString * const kPOPViewScaleY;
 extern NSString * const kPOPViewSize;
-
+extern NSString * const kPOPViewTintColor;
 
 /**
  Common UIScrollView property names.
@@ -151,12 +159,20 @@ extern NSString * const kPOPViewSize;
 extern NSString * const kPOPScrollViewContentOffset;
 extern NSString * const kPOPScrollViewContentSize;
 extern NSString * const kPOPScrollViewZoomScale;
+extern NSString * const kPOPScrollViewContentInset;
+extern NSString * const kPOPScrollViewScrollIndicatorInsets;
 
 /**
  Common UITableView property names.
  */
 extern NSString * const kPOPTableViewContentOffset;
 extern NSString * const kPOPTableViewContentSize;
+
+/**
+ Common UICollectionView property names.
+ */
+extern NSString * const kPOPCollectionViewContentOffset;
+extern NSString * const kPOPCollectionViewContentSize;
 
 /**
  Common UINavigationBar property names.
@@ -177,5 +193,59 @@ extern NSString * const kPOPTabBarBarTintColor;
  Common UILabel property names.
  */
 extern NSString * const kPOPLabelTextColor;
+
+#else
+
+/**
+ Common NSView property names.
+ */
+extern NSString * const kPOPViewFrame;
+extern NSString * const kPOPViewBounds;
+extern NSString * const kPOPViewAlphaValue;
+extern NSString * const kPOPViewFrameRotation;
+extern NSString * const kPOPViewFrameCenterRotation;
+extern NSString * const kPOPViewBoundsRotation;
+
+/**
+ Common NSWindow property names.
+ */
+extern NSString * const kPOPWindowFrame;
+extern NSString * const kPOPWindowAlphaValue;
+extern NSString * const kPOPWindowBackgroundColor;
+
+#endif
+
+#if SCENEKIT_SDK_AVAILABLE
+
+/**
+ Common SceneKit property names.
+ */
+extern NSString * const kPOPSCNNodePosition;
+extern NSString * const kPOPSCNNodePositionX;
+extern NSString * const kPOPSCNNodePositionY;
+extern NSString * const kPOPSCNNodePositionZ;
+extern NSString * const kPOPSCNNodeTranslation;
+extern NSString * const kPOPSCNNodeTranslationX;
+extern NSString * const kPOPSCNNodeTranslationY;
+extern NSString * const kPOPSCNNodeTranslationZ;
+extern NSString * const kPOPSCNNodeRotation;
+extern NSString * const kPOPSCNNodeRotationX;
+extern NSString * const kPOPSCNNodeRotationY;
+extern NSString * const kPOPSCNNodeRotationZ;
+extern NSString * const kPOPSCNNodeRotationW;
+extern NSString * const kPOPSCNNodeEulerAngles;
+extern NSString * const kPOPSCNNodeEulerAnglesX;
+extern NSString * const kPOPSCNNodeEulerAnglesY;
+extern NSString * const kPOPSCNNodeEulerAnglesZ;
+extern NSString * const kPOPSCNNodeOrientation;
+extern NSString * const kPOPSCNNodeOrientationX;
+extern NSString * const kPOPSCNNodeOrientationY;
+extern NSString * const kPOPSCNNodeOrientationZ;
+extern NSString * const kPOPSCNNodeOrientationW;
+extern NSString * const kPOPSCNNodeScale;
+extern NSString * const kPOPSCNNodeScaleX;
+extern NSString * const kPOPSCNNodeScaleY;
+extern NSString * const kPOPSCNNodeScaleZ;
+extern NSString * const kPOPSCNNodeScaleXY;
 
 #endif

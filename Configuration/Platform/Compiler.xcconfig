@@ -1,14 +1,14 @@
-// 
+//
 // Copyright (c) 2014-present, Facebook, Inc.
 // All rights reserved.
-// 
+//
 // This source code is licensed under the BSD-style license found in the
 // LICENSE file in the root directory of this source tree. An additional grant
 // of patent rights can be found in the PATENTS file in the same directory.
-// 
+//
 
 // Don't warn on implicit property synthesis
-CLANG_WARN_OBJC_MISSING_PROPERTY_SYNTHESIS = NO
+CLANG_WARN_OBJC_MISSING_PROPERTY_SYNTHESIS = YES
 
 // Treat warnings as errors
 GCC_TREAT_WARNINGS_AS_ERRORS = YES
@@ -21,9 +21,9 @@ CLANG_WARN_EMPTY_BODY = YES
 GCC_WARN_UNINITIALIZED_AUTOS = YES
 GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO
 GCC_WARN_UNUSED_FUNCTION = YES
-
-// Silence Eigen warnings
-GCC_WARN_SHADOW = NO
+GCC_WARN_SHADOW = YES
+GCC_WARN_SIGN_COMPARE = YES
+WARNING_CFLAGS = -Wall -Wextra -Wno-unused-parameter
 
 // Enable C++11 support
 CLANG_CXX_LANGUAGE_STANDARD = c++11

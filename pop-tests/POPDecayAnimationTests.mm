@@ -10,10 +10,11 @@
 #import <QuartzCore/QuartzCore.h>
 
 #import <OCMock/OCMock.h>
-#import <SenTestingKit/SenTestingKit.h>
 
-#import <POP/POP.h>
-#import <POP/POPAnimatorPrivate.h>
+#import <XCTest/XCTest.h>
+
+#import <pop/POP.h>
+#import <pop/POPAnimatorPrivate.h>
 
 #import "POPAnimatable.h"
 #import "POPAnimationTestsExtras.h"
@@ -68,11 +69,11 @@ static const CGFloat epsilon = 0.0001f;
 
   // did reach to value
   POPAnimationValueEvent *didReachToEvent = [[tracer eventsWithType:kPOPAnimationEventDidReachToValue] lastObject];
-  STAssertEqualObjects(didReachToEvent.value, anim.toValue, @"unexpected did reach to event: %@ anim:%@", didReachToEvent, anim);
+  XCTAssertEqualObjects(didReachToEvent.value, anim.toValue, @"unexpected did reach to event: %@ anim:%@", didReachToEvent, anim);
 
   // finished
   POPAnimationValueEvent *stopEvent = [[tracer eventsWithType:kPOPAnimationEventDidStop] lastObject];
-  STAssertEqualObjects(stopEvent.value, @YES, @"unexpected stop event %@", stopEvent);
+  XCTAssertEqualObjects(stopEvent.value, @YES, @"unexpected stop event %@", stopEvent);
 
   // all write values monotonically increasing
   NSArray *writeEvents = [tracer eventsWithType:kPOPAnimationEventPropertyWrite];
@@ -80,14 +81,14 @@ static const CGFloat epsilon = 0.0001f;
   for (POPAnimationValueEvent *writeEvent in writeEvents) {
     if (lastWriteEvent) {
       NSComparisonResult result = [lastWriteEvent.value compare:writeEvent.value];
-      STAssertTrue(NSOrderedAscending == result || NSOrderedSame == result, @"write event values not monotonically increasing current:%@ last:%@ all:%@", writeEvent, lastWriteEvent, writeEvents);
+      XCTAssertTrue(NSOrderedAscending == result || NSOrderedSame == result, @"write event values not monotonically increasing current:%@ last:%@ all:%@", writeEvent, lastWriteEvent, writeEvents);
     }
     lastWriteEvent = writeEvent;
   }
 
   // convergence threshold
   NSUInteger toValueFrameCount = POPAnimationCountLastEventValues(writeEvents, anim.toValue, anim.property.threshold);
-  STAssertTrue(toValueFrameCount <= kPOPAnimationConvergenceMaxFrameCount, @"unexpected convergence; toValueFrameCount: %d", toValueFrameCount);
+  XCTAssertTrue(toValueFrameCount <= kPOPAnimationConvergenceMaxFrameCount, @"unexpected convergence; toValueFrameCount: %lu", (unsigned long)toValueFrameCount);
 }
 
 - (void)testConvergenceNegativeVelocity
@@ -105,11 +106,11 @@ static const CGFloat epsilon = 0.0001f;
 
   // did reach to value
   POPAnimationValueEvent *didReachToEvent = [[tracer eventsWithType:kPOPAnimationEventDidReachToValue] lastObject];
-  STAssertEqualObjects(didReachToEvent.value, anim.toValue, @"unexpected did reach to event: %@ anim:%@", didReachToEvent, anim);
+  XCTAssertEqualObjects(didReachToEvent.value, anim.toValue, @"unexpected did reach to event: %@ anim:%@", didReachToEvent, anim);
 
   // finished
   POPAnimationValueEvent *stopEvent = [[tracer eventsWithType:kPOPAnimationEventDidStop] lastObject];
-  STAssertEqualObjects(stopEvent.value, @YES, @"unexpected stop event %@", stopEvent);
+  XCTAssertEqualObjects(stopEvent.value, @YES, @"unexpected stop event %@", stopEvent);
 
   // all write values monotonically increasing
   NSArray *writeEvents = [tracer eventsWithType:kPOPAnimationEventPropertyWrite];
@@ -117,27 +118,27 @@ static const CGFloat epsilon = 0.0001f;
   for (POPAnimationValueEvent *writeEvent in writeEvents) {
     if (lastWriteEvent) {
       NSComparisonResult result = [lastWriteEvent.value compare:writeEvent.value];
-      STAssertTrue(NSOrderedDescending == result || NSOrderedSame == result, @"write event values not monotonically decreasing current:%@ last:%@ all:%@", writeEvent, lastWriteEvent, writeEvents);
+      XCTAssertTrue(NSOrderedDescending == result || NSOrderedSame == result, @"write event values not monotonically decreasing current:%@ last:%@ all:%@", writeEvent, lastWriteEvent, writeEvents);
     }
     lastWriteEvent = writeEvent;
   }
 
   // convergence threshold
   NSUInteger toValueFrameCount = POPAnimationCountLastEventValues(writeEvents, anim.toValue, anim.property.threshold);
-  STAssertTrue(toValueFrameCount <= kPOPAnimationConvergenceMaxFrameCount, @"unexpected convergence; toValueFrameCount: %d", toValueFrameCount);
+  XCTAssertTrue(toValueFrameCount <= kPOPAnimationConvergenceMaxFrameCount, @"unexpected convergence; toValueFrameCount: %lu", (unsigned long)toValueFrameCount);
 }
 
 - (void)test2DConvergence
 {
   POPDecayAnimation *animX = self._positionXAnimation;
   POPDecayAnimation *animY = self._positionYAnimation;
-  STAssertEquals(animX.duration, animY.duration, @"unexpected durations animX:%@ animY:%@", animX, animY);
-  STAssertEqualObjects(animX.toValue, animY.toValue, @"unexpected toValue animX:%@ animY:%@", animX, animY);
+  XCTAssertEqual(animX.duration, animY.duration, @"unexpected durations animX:%@ animY:%@", animX, animY);
+  XCTAssertEqualObjects(animX.toValue, animY.toValue, @"unexpected toValue animX:%@ animY:%@", animX, animY);
 
   POPDecayAnimation *anim = self._positionAnimation;
   CFTimeInterval duration = anim.duration;
-  STAssertEqualsWithAccuracy(animX.duration, duration, epsilon, @"unexpected durations animX:%@ anim:%@", animX, anim);
-  STAssertEqualObjects(animX.toValue, @([anim.toValue CGPointValue].x), @"unexpected toValue animX:%@ anim:%@", animX, anim);
+  XCTAssertEqualWithAccuracy(animX.duration, duration, epsilon, @"unexpected durations animX:%@ anim:%@", animX, anim);
+  XCTAssertEqualObjects(animX.toValue, @([anim.toValue CGPointValue].x), @"unexpected toValue animX:%@ anim:%@", animX, anim);
 
   POPAnimatable *circle = [POPAnimatable new];
   POPAnimationTracer *tracer = anim.tracer;
@@ -149,19 +150,19 @@ static const CGFloat epsilon = 0.0001f;
 
   // did reach to value
   POPAnimationValueEvent *didReachToEvent = [[tracer eventsWithType:kPOPAnimationEventDidReachToValue] lastObject];
-  STAssertEqualObjects(didReachToEvent.value, anim.toValue, @"unexpected did reach to event: %@ anim:%@", didReachToEvent, anim);
+  XCTAssertEqualObjects(didReachToEvent.value, anim.toValue, @"unexpected did reach to event: %@ anim:%@", didReachToEvent, anim);
 
   // finished
   POPAnimationValueEvent *stopEvent = [[tracer eventsWithType:kPOPAnimationEventDidStop] lastObject];
-  STAssertEqualObjects(stopEvent.value, @YES, @"unexpected stop event %@", stopEvent);
+  XCTAssertEqualObjects(stopEvent.value, @YES, @"unexpected stop event %@", stopEvent);
 
   // increase X velocity
   anim.velocity = [NSValue valueWithCGPoint:CGPointMake(7223.021 + 1000, 7223.021)];
-  STAssertTrue(anim.duration > duration, @"unexpected duration expected:%f anim:%@", duration, anim);
+  XCTAssertTrue(anim.duration > duration, @"unexpected duration expected:%f anim:%@", duration, anim);
 
   // increase Y velocity
   anim.velocity = [NSValue valueWithCGPoint:CGPointMake(7223.021, 7223.021 + 1000)];
-  STAssertTrue(anim.duration > duration, @"unexpected duration expected:%f anim:%@", duration, anim);
+  XCTAssertTrue(anim.duration > duration, @"unexpected duration expected:%f anim:%@", duration, anim);
 }
 
 - (void)testRemovedOnCompletionNoStartStopBasics
@@ -200,11 +201,11 @@ static const CGFloat epsilon = 0.0001f;
 
   // verify delegate
   [delegate verify];
-  STAssertTrue(completionBlock, @"completion block did not execute %@", allEvents);
-  STAssertTrue(completionBlockFinished, @"completion block did not finish %@", allEvents);
+  XCTAssertTrue(completionBlock, @"completion block did not execute %@", allEvents);
+  XCTAssertTrue(completionBlockFinished, @"completion block did not finish %@", allEvents);
 
   // assert animation has not been removed
-  STAssertTrue(anim == [layer pop_animationForKey:animationKey], @"expected animation on layer animations:%@", [layer pop_animationKeys]);
+  XCTAssertTrue(anim == [layer pop_animationForKey:animationKey], @"expected animation on layer animations:%@", [layer pop_animationKeys]);
 }
 
 - (void)testRemovedOnCompletionNoContinuations
@@ -259,9 +260,9 @@ static const CGFloat epsilon = 0.0001f;
 
       // verify delegate
       [delegate verify];
-      STAssertTrue(1 == didReachEvents.count, @"unexpected didReachEvents %@", didReachEvents);
-      STAssertTrue(completionBlock, @"completion block did not execute %@", allEvents);
-      STAssertTrue(completionBlockFinished, @"completion block did not finish %@", allEvents);
+      XCTAssertTrue(1 == didReachEvents.count, @"unexpected didReachEvents %@", didReachEvents);
+      XCTAssertTrue(completionBlock, @"completion block did not execute %@", allEvents);
+      XCTAssertTrue(completionBlockFinished, @"completion block did not finish %@", allEvents);
     } else if (velocities.count - 1 == idx) {
       // continue stoped animation
       [tracer reset];
@@ -278,9 +279,9 @@ static const CGFloat epsilon = 0.0001f;
 
       // verify delegate
       [delegate verify];
-      STAssertTrue(1 == didReachEvents.count, @"unexpected didReachEvents %@", didReachEvents);
-      STAssertTrue(completionBlock, @"completion block did not execute %@", allEvents);
-      STAssertTrue(completionBlockFinished, @"completion block did not finish %@", allEvents);
+      XCTAssertTrue(1 == didReachEvents.count, @"unexpected didReachEvents %@", didReachEvents);
+      XCTAssertTrue(completionBlock, @"completion block did not execute %@", allEvents);
+      XCTAssertTrue(completionBlockFinished, @"completion block did not finish %@", allEvents);
     } else {
       // continue stoped (idx = 1) or started animation
       if (1 == idx) {
@@ -301,13 +302,13 @@ static const CGFloat epsilon = 0.0001f;
 
       // verify delegate
       [delegate verify];
-      STAssertTrue(0 == didReachEvents.count, @"unexpected didReachEvents %@", didReachEvents);
-      STAssertFalse(completionBlock, @"completion block did not execute %@ %@", anim, allEvents);
-      STAssertFalse(completionBlockFinished, @"completion block did not finish %@ %@", anim, allEvents);
+      XCTAssertTrue(0 == didReachEvents.count, @"unexpected didReachEvents %@", didReachEvents);
+      XCTAssertFalse(completionBlock, @"completion block did not execute %@ %@", anim, allEvents);
+      XCTAssertFalse(completionBlockFinished, @"completion block did not finish %@ %@", anim, allEvents);
     }
 
     // assert animation has not been removed
-    STAssertTrue(anim == [layer pop_animationForKey:animationKey], @"expected animation on layer animations:%@", [layer pop_animationKeys]);
+    XCTAssertTrue(anim == [layer pop_animationForKey:animationKey], @"expected animation on layer animations:%@", [layer pop_animationKeys]);
   }];
 }
 
@@ -341,7 +342,7 @@ static const CGFloat epsilon = 0.0001f;
   // verify number values
   NSArray *writeEvents = [tracer eventsWithType:kPOPAnimationEventPropertyWrite];
   for (POPAnimationValueEvent *writeEvent in writeEvents) {
-    STAssertEqualObjects(writeEvent.value, [NSValue valueWithCGPoint:initialValue], @"unexpected write event:%@ anim:%@", writeEvent, anim);
+    XCTAssertEqualObjects(writeEvent.value, [NSValue valueWithCGPoint:initialValue], @"unexpected write event:%@ anim:%@", writeEvent, anim);
   }
 }
 
@@ -375,7 +376,7 @@ static const CGFloat epsilon = 0.0001f;
   [[delegate expect] pop_animationDidStop:anim finished:YES];
 
   // run animation some more
-  POPAnimatorRenderDuration(self.animator, CACurrentMediaTime(), 4, 1.0/60.0);
+  POPAnimatorRenderDuration(self.animator, self.beginTime + 1, 4, 1.0/60.0);
   NSArray *moreWriteEvents = [tracer eventsWithType:kPOPAnimationEventPropertyWrite];
 
   // verify stop delegation
@@ -385,7 +386,7 @@ static const CGFloat epsilon = 0.0001f;
   POPAnimationValueEvent *firstEvent = [writeEvents firstObject];
   POPAnimationValueEvent *lastEvent = [writeEvents lastObject];
   POPAnimationValueEvent *firstMoreEvent = [moreWriteEvents firstObject];
-  STAssertTrue(NSOrderedAscending == [firstEvent.value compare:lastEvent.value]
+  XCTAssertTrue(NSOrderedAscending == [firstEvent.value compare:lastEvent.value]
                && NSOrderedAscending == [lastEvent.value compare:firstMoreEvent.value], @"write event values not monotonically increasing %@ %@ %@", firstEvent, lastEvent, firstMoreEvent);
 }
 
@@ -423,9 +424,50 @@ static const CGFloat epsilon = 0.0001f;
   POPAnimationValueEvent *lastEvent = [writeEvents lastObject];
   CGRect lastRect = [lastEvent.value CGRectValue];
   
-  STAssertTrue(!CGRectEqualToRect(fromRect, lastRect), @"unexpected last rect value: %@", lastEvent);
-  STAssertTrue(lastRect.origin.x == lastRect.origin.y && lastRect.size.width == lastRect.size.height && lastRect.origin.x < lastRect.size.width, @"unexpected last rect value: %@", lastEvent);
+  XCTAssertTrue(!CGRectEqualToRect(fromRect, lastRect), @"unexpected last rect value: %@", lastEvent);
+  XCTAssertTrue(lastRect.origin.x == lastRect.origin.y && lastRect.size.width == lastRect.size.height && lastRect.origin.x < lastRect.size.width, @"unexpected last rect value: %@", lastEvent);
 }
+
+#if TARGET_OS_IPHONE
+- (void)testEdgeInsetsSupport
+{
+  const UIEdgeInsets fromEdgeInsets = UIEdgeInsetsZero;
+  const UIEdgeInsets velocityEdgeInsets = UIEdgeInsetsMake(100, 100, 1000, 1000);
+
+  POPDecayAnimation *anim = [POPDecayAnimation animation];
+  anim.property = [POPAnimatableProperty propertyWithName:kPOPScrollViewContentInset];
+  anim.fromValue = [NSValue valueWithUIEdgeInsets:fromEdgeInsets];
+  anim.velocity = [NSValue valueWithUIEdgeInsets:velocityEdgeInsets];
+
+  id delegate = [OCMockObject niceMockForProtocol:@protocol(POPAnimationDelegate)];
+  anim.delegate = delegate;
+
+  // expect start and stop to be called
+  [[delegate expect] pop_animationDidStart:anim];
+  [[delegate expect] pop_animationDidStop:anim finished:YES];
+
+  // start tracer
+  POPAnimationTracer *tracer = anim.tracer;
+  [tracer start];
+
+  id scrollView = [OCMockObject niceMockForClass:[UIScrollView class]];
+  [scrollView pop_addAnimation:anim forKey:nil];
+
+  // run animation
+  POPAnimatorRenderDuration(self.animator, self.beginTime, 3, 1.0/60.0);
+
+  NSArray *writeEvents = [tracer eventsWithType:kPOPAnimationEventPropertyWrite];
+
+  // verify delegate
+  [delegate verify];
+
+  POPAnimationValueEvent *lastEvent = [writeEvents lastObject];
+  UIEdgeInsets lastEdgeInsets = [lastEvent.value UIEdgeInsetsValue];
+
+  XCTAssertTrue(!UIEdgeInsetsEqualToEdgeInsets(fromEdgeInsets, lastEdgeInsets), @"unexpected last edge insets value: %@", lastEvent);
+  XCTAssertTrue(lastEdgeInsets.top == lastEdgeInsets.left && lastEdgeInsets.bottom == lastEdgeInsets.right && lastEdgeInsets.top < lastEdgeInsets.bottom, @"unexpected last edge insets value: %@", lastEvent);
+}
+#endif
 
 - (void)testEndValueOnReuse
 {
@@ -441,10 +483,10 @@ static const CGFloat epsilon = 0.0001f;
   POPAnimatorRenderDuration(self.animator, self.beginTime, 5.0, 1.0/60.0);
 
   NSArray *stopEvent = [tracer eventsWithType:kPOPAnimationEventDidStop];
-  STAssertTrue(1 == stopEvent.count, @"unexpected events:%@", tracer.allEvents);
+  XCTAssertTrue(1 == stopEvent.count, @"unexpected events:%@", tracer.allEvents);
 
   CGFloat lastValue = [[(POPAnimationValueEvent *)tracer.writeEvents.lastObject value] floatValue];
-  STAssertEqualsWithAccuracy(toValue, lastValue, 0.5, @"expected:%f actual event:%@", tracer.writeEvents.lastObject);
+  XCTAssertEqualWithAccuracy(toValue, lastValue, 0.5, @"expected:%f actual event:%@", lastValue, tracer.writeEvents.lastObject);
   // update animation
   anim.fromValue = @([anim.toValue floatValue] - 100);
   anim.velocity = @(5000.);
@@ -456,7 +498,7 @@ static const CGFloat epsilon = 0.0001f;
 
   // verify decayed passed initial toValue
   lastValue = [[(POPAnimationValueEvent *)tracer.writeEvents.lastObject value] floatValue];
-  STAssertTrue(lastValue > toValue, @"unexpected last value:%f");
+  XCTAssertTrue(lastValue > toValue, @"unexpected last value:%f", lastValue);
 }
 
 - (void)testComputedProperties
@@ -466,22 +508,37 @@ static const CGFloat epsilon = 0.0001f;
   // set velocity, test duration
   anim.velocity = @(100);
   CGFloat d1 = anim.duration;
-  STAssertTrue(d1 > 0, @"unexpected duration %@", anim);
+  XCTAssertTrue(d1 > 0, @"unexpected duration %@", anim);
   
   // set velocity, test duration
   anim.velocity = @(1000);
   CGFloat d2 = anim.duration;
-  STAssertTrue(d2 > d1, @"unexpected duration %@", anim);
+  XCTAssertTrue(d2 > d1, @"unexpected duration %@", anim);
 
   // set from value, test to value
   anim.fromValue = @(0);
   CGFloat p1 = [anim.toValue floatValue];
-  STAssertTrue(p1 > [anim.fromValue floatValue], @"unexpected to value %@", anim);
+  XCTAssertTrue(p1 > [anim.fromValue floatValue], @"unexpected to value %@", anim);
   
   // set from value, test to value
   anim.fromValue = @(10000);
   CGFloat p2 = [anim.toValue floatValue];
-  STAssertTrue(p2 > [anim.fromValue floatValue] && p2 > p1, @"unexpected to value %@", anim);
+  XCTAssertTrue(p2 > [anim.fromValue floatValue] && p2 > p1, @"unexpected to value %@", anim);
+}
+
+- (void)testNSCopyingSupportPOPDecayAnimation
+{
+  POPDecayAnimation *anim = [POPDecayAnimation animationWithPropertyNamed:@"test_prop_name"];
+  
+  configureConcretePropertyAnimation(anim);
+  
+  anim.velocity = @(1.8888);
+  anim.deceleration = -9.8;
+  
+  POPDecayAnimation *copy = [anim copy];
+  
+  XCTAssertEqualObjects(copy.velocity, anim.velocity, @"expected equality; value1:%@ value2:%@", copy.velocity, anim.velocity);
+  XCTAssertEqual(copy.deceleration, anim.deceleration, @"expected equality; value1:%@ value2:%@", @(copy.deceleration), @(anim.deceleration));
 }
 
 @end

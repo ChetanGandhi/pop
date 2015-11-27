@@ -7,14 +7,19 @@
  of patent rights can be found in the PATENTS file in the same directory.
  */
 
-#import <SenTestingKit/SenTestingKit.h>
+#import <cmath>
+
+#import <XCTest/XCTest.h>
+
 #import "POPCGUtils.h"
 
 @class CALayer;
 @class POPAnimator;
 @class POPAnimatableProperty;
+@class POPAnimation;
+@class POPPropertyAnimation;
 
-@interface POPBaseAnimationTests : SenTestCase
+@interface POPBaseAnimationTests : XCTestCase
 
 // two layers for test use
 @property (strong, nonatomic) CALayer *layer1, *layer2;
@@ -28,6 +33,9 @@
 // radius animatable property
 @property (strong, nonatomic) POPAnimatableProperty *radiusProperty;
 
+- (void)testCopyingSucceedsForConcreteAnimation:(POPAnimation *)anim;
+- (void)testCopyingSucceedsForConcretePropertyAnimation:(POPPropertyAnimation *)anim;
+
 @end
 
 // max frame count required for animations to converge
@@ -40,7 +48,7 @@ extern NSUInteger POPAnimationCountLastEventValues(NSArray *events, NSNumber *va
 extern BOOL POPAnimationEventsContainValue(NSArray *events, NSNumber *value);
 
 // equality with epsilon
-#define _EQLF_(x, y, epsilon) (fabsf ((x) - (y)) < epsilon)
+#define _EQL_(x, y, epsilon) (std::abs ((x) - (y)) < epsilon)
 
 // color equality assert
 #define POPAssertColorEqual(c1, c2) \
@@ -48,5 +56,8 @@ extern BOOL POPAnimationEventsContainValue(NSArray *events, NSNumber *value);
   CGFloat v1[4], v2[4]; \
   POPCGColorGetRGBAComponents(c1, v1); \
   POPCGColorGetRGBAComponents(c2, v2); \
-  STAssertTrue(_EQLF_(v1[0], v2[0], 1e-6) && _EQLF_(v1[1], v2[1], 1e-6) && _EQLF_(v1[2], v2[2], 1e-6) && _EQLF_(v1[3], v2[3], 1e-6), @"not equal color:[r:%f g:%f b:%f a:%f] color:[r:%f g:%f b:%f a:%f]", v1[0], v1[1], v1[2], v1[3], v2[0], v2[1], v2[2], v2[3]); \
+  XCTAssertTrue(_EQL_(v1[0], v2[0], 1e-6) && _EQL_(v1[1], v2[1], 1e-6) && _EQL_(v1[2], v2[2], 1e-6) && _EQL_(v1[3], v2[3], 1e-6), @"not equal color:[r:%f g:%f b:%f a:%f] color:[r:%f g:%f b:%f a:%f]", v1[0], v1[1], v1[2], v1[3], v2[0], v2[1], v2[2], v2[3]); \
 }
+
+extern void configureConcreteAnimation(POPAnimation *anim);
+extern void configureConcretePropertyAnimation(POPPropertyAnimation *anim);
